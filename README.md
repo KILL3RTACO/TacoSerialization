@@ -11,10 +11,10 @@ TacoSerialization's only dependency is the included org.json package (and Bukkit
 
 For com.kill3rtaco.tacoserialization:
 
-    `.*\.tacoserialization`
-    
+   `.*\.tacoserialization`
+
 For org.json:
 
    `.*\.json`
-    
+
 For those of you that don't know about RegExs, this means to keep 'tacoserialization' and 'json' at the end of the package names.
