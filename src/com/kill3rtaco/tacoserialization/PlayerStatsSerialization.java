@@ -7,6 +7,11 @@ import org.json.JSONObject;
 
 /**
  * A class to help with the serialization of player stats, like exp level and health.
+ * <br/><br/>
+ * This serialization class supports optional serialization.<br/>
+ * TacoSerialization will create a folder in your server plugins directory (wherever that may be) called
+ * 'TacoSerialization'. Inside the folder will be a config.yml file. Various values can be turned off to
+ * prevent some keys from being generated.
  * @author KILL3RTACO
  *
  */
@@ -14,6 +19,11 @@ public class PlayerStatsSerialization {
 	
 	protected PlayerStatsSerialization() {}
 	
+	/**
+	 * Serialize a player's stats
+	 * @param player The player whose stats to serialize
+	 * @return The serialized stats
+	 */
 	public static JSONObject serializePlayerStats(Player player){
 		try {
 			JSONObject root = new JSONObject();
@@ -44,14 +54,32 @@ public class PlayerStatsSerialization {
 		}
 	}
 	
+	/**
+	 * Serialize a player's stats as a string
+	 * @param player The player whose stats to serialize
+	 * @return The serialization string
+	 */
 	public static String serializePlayerStatsAsString(Player player){
 		return serializePlayerStatsAsString(player, false);
 	}
 	
+	/**
+	 * Serialize a player's stats as a string
+	 * @param player The player whose stats to serialize
+	 * @param pretty Whether the resulting string should be 'pretty' or not
+	 * @return The serialization string
+	 */
 	public static String serializePlayerStatsAsString(Player player, boolean pretty){
 		return serializePlayerStatsAsString(player, pretty, 5);
 	}
 	
+	/**
+	 * Serialize a player's stats as a string
+	 * @param player The player whose stats to serialize
+	 * @param pretty Whether the resulting string should be 'pretty' or not
+	 * @param indentFactor The amount of spaces in a tab
+	 * @return The serialization string
+	 */
 	public static String serializePlayerStatsAsString(Player player, boolean pretty, int indentFactor){
 		try{
 			if(pretty){
@@ -65,6 +93,11 @@ public class PlayerStatsSerialization {
 		}
 	}
 	
+	/**
+	 * Apply stats to a player
+	 * @param player The player to affect
+	 * @param stats The stats to apply
+	 */
 	public static void applyPlayerStats(Player player, String stats){
 		try {
 			applyPlayerStats(player, new JSONObject(stats));
@@ -73,6 +106,11 @@ public class PlayerStatsSerialization {
 		}
 	}
 	
+	/**
+	 * Apply stats to a player
+	 * @param player The player to affect
+	 * @param stats The stats to apply
+	 */
 	public static void applyPlayerStats(Player player, JSONObject stats){
 		try {
 			if(stats.has("can-fly"))
@@ -98,6 +136,17 @@ public class PlayerStatsSerialization {
 		} catch (JSONException e){
 			e.printStackTrace();
 		}
+	}
+	
+
+	
+	/**
+	 * Test if a certain key should be serialized
+	 * @param key The key to test
+	 * @return Whether the key should be serilaized or not
+	 */
+	public static boolean shouldSerialize(String key){
+		return SerializationConfig.getShouldSerialize("player-stats." + key);
 	}
 
 }

@@ -15,14 +15,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * A class to help with the serialization of ItemStacks.
+ * @author KILL3RTACO
+ *
+ */
 public class SingleItemSerialization {
 
 	protected SingleItemSerialization() {}
 	
+	/**
+	 * Serialize an ItemStack that is inside an inventory. An extra "index" key will be added to store the
+	 * position of the ItemStack in the inventory
+	 * @param items The items to serialize
+	 * @param index The position of the ItemStack inside the inventory
+	 * @return The serialized items
+	 */
 	public static JSONObject serializeItemInInventory(ItemStack items, int index){
 		return serializeItems(items, true, index);
 	}
 	
+	/**
+	 * Serialize an ItemStack
+	 * @param items The items to serialize
+	 * @return The serialized items
+	 */
 	public static JSONObject serializeItem(ItemStack items){
 		return serializeItems(items, false, 0);
 	}
@@ -73,10 +90,22 @@ public class SingleItemSerialization {
 		}
 	}
 	
+	/**
+	 * Deserialize an ItemStack
+	 * @param item The ItemStack to deserialize
+	 * @return The Deserialized ItemStack
+	 */
 	public static ItemStack getItem(String item){
 		return getItem(item, 0);
 	}
 	
+	/**
+	 * Deserialize an ItemStack. An index if given strictly for debug purposes. When an error message is given
+	 * the index will be used for more useful reference
+	 * @param item The ItemStack to deserialize
+	 * @param index The index of the ItemStack in an inventory or ItemStack array
+	 * @return The deserialized ItemStack
+	 */
 	public static ItemStack getItem(String item, int index){
 		try {
 			return getItem(new JSONObject(item), index);
@@ -86,10 +115,22 @@ public class SingleItemSerialization {
 		}
 	}
 	
+	/**
+	 * Deserialize an ItemStack
+	 * @param item The ItemStack to deserialize
+	 * @return The Deserialized ItemStack
+	 */
 	public static ItemStack getItem(JSONObject item){
 		return getItem(item, 0);
 	}
-	
+
+	/**
+	 * Deserialize an ItemStack. An index if given strictly for debug purposes. When an error message is given
+	 * the index will be used for more useful reference
+	 * @param item The ItemStack to deserialize
+	 * @param index The index of the ItemStack in an inventory or ItemStack array
+	 * @return The deserialized ItemStack
+	 */
 	public static ItemStack getItem(JSONObject item, int index){
 		try {
 			int id = item.getInt("id");
@@ -136,14 +177,35 @@ public class SingleItemSerialization {
 		}
 	}
 	
+	/**
+	 * Serialize an ItemStack from an inventory as a string 
+	 * @param items The ItemStack to serialize
+	 * @param index The position of the ItemStack
+	 * @return The serialization string
+	 */
 	public static String serializeItemInInventoryAsString(ItemStack items, int index){
 		return serializeItemInInventoryAsString(items, index, false);
 	}
 	
+	/**
+	 * Serialize an ItemStack from an inventory as a string 
+	 * @param items The ItemStack to serialize
+	 * @param index The position of the ItemStack
+	 * @param pretty Whether the resulting string should be 'pretty' or not
+	 * @return The serialization string
+	 */
 	public static String serializeItemInInventoryAsString(ItemStack items, int index, boolean pretty){
 		return serializeItemInInventoryAsString(items, index, pretty, 5);
 	}
 	
+	/**
+	 * Serialize an ItemStack from an inventory as a string 
+	 * @param items The ItemStack to serialize
+	 * @param index The position of the ItemStack
+	 * @param pretty Whether the resulting string should be 'pretty' or not
+	 * @param indentFactor The amount of spaces in a tab
+	 * @returnThe serialization string
+	 */
 	public static String serializeItemInInventoryAsString(ItemStack items, int index, boolean pretty, int indentFactor){
 		try {
 			if(pretty){
@@ -157,14 +219,32 @@ public class SingleItemSerialization {
 		}
 	}
 	
+	/**
+	 * Serialize an ItemStack as a string 
+	 * @param items The ItemStack to serialize
+	 * @return The serialization string
+	 */
 	public static String serializeItemAsString(ItemStack items){
 		return serializeItemAsString(items, false);
 	}
 	
+	/**
+	 * Serialize an ItemStack as a string 
+	 * @param items The ItemStack to serialize
+	 * @param pretty Whether the resulting string should be 'pretty' or not
+	 * @return The serialization string
+	 */
 	public static String serializeItemAsString(ItemStack items, boolean pretty){
 		return serializeItemAsString(items, pretty, 5);
 	}
 	
+	/**
+	 * Serialize an ItemStack as a string 
+	 * @param items The ItemStack to serialize
+	 * @param pretty Whether the resulting string should be 'pretty' or not
+	 * @param indentFactor The amount of spaces in a tab
+	 * @return The serialization string
+	 */
 	public static String serializeItemAsString(ItemStack items, boolean pretty, int indentFactor){
 		try {
 			if(pretty){

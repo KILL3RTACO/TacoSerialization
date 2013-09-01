@@ -10,14 +10,14 @@ import org.bukkit.inventory.ItemStack;
  * A class to help with the serialization of Enchantments. Because of the ability to add unsafe enchantments
  * (item and enchantment level are ignored), enchantments are serialized in a different way than like ChestShop.
  * ChestShop takes the enchantment id, converts it into a String, and appends the level. It then iterates this
- * process for each enchantment. Afterwards, it has a very long number, which it then conveters to a base-36 String.
- * 
+ * process for each enchantment. Afterwards, it has a very long number, which it then conveters to a base-32 String.
+ * <br/><br/>
  * This class serializes it much differently, and it is in fact more human readable. The process can be explained
  * as such:
  * <pre>
  * String serializationString = "";
  * for(Enchantment e : enchantments){
- *      serializationString += e.getId() + ":" + e.getLevel() + ";";
+ *     serializationString += e.getId() + ":" + e.getLevel() + ";";
  * }
  * </pre>
  * 
@@ -32,6 +32,12 @@ public class EnchantmentSerialization {
 
 	protected EnchantmentSerialization() {}
 	
+	/**
+	 * Serialize a Map of Enchantments and their levels into a string that follows the regex
+	 * <pre>([0-9]+:[0-9]+;)+</pre>
+	 * @param enchantments The Enchantment Map to serialize
+	 * @return
+	 */
 	public static String serializeEnchantments(Map<Enchantment, Integer> enchantments){
 		String serialized = "";
 		for(Enchantment e : enchantments.keySet()){
@@ -40,6 +46,11 @@ public class EnchantmentSerialization {
 		return serialized;
 	}
 	
+	/**
+	 * Get a Map of Enchantments and their levels from an enchantment serialization string
+	 * @param serializedEnchants The serialization string to decode
+	 * @return A Map of enchantments and their levels
+	 */
 	public static Map<Enchantment, Integer> getEnchantments(String serializedEnchants){
 		HashMap<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
 		if(serializedEnchants.isEmpty()) return enchantments;
@@ -62,6 +73,11 @@ public class EnchantmentSerialization {
 		return enchantments;
 	}
 	
+	/**
+	 * Get a Map of Enchantments and their levels from an old enchantment code
+	 * @param oldFormat The old (ChestShop compatible) enchantment code.
+	 * @return A map of enchantments and their levels using the old (ChestShop compatible) enchantment code.
+	 */
 	public static Map<Enchantment, Integer> getEnchantsFromOldFormat(String oldFormat){
 		HashMap<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
 		if(oldFormat.length() == 0){
@@ -78,16 +94,31 @@ public class EnchantmentSerialization {
 		return enchants;
 	}
 	
+	/**
+	 * Convert to the old (ChestShop compatible) enchantment code to a more friendly format
+	 * @param oldFormat
+	 * @return The converted String
+	 */
 	public static String convert(String oldFormat){
 		Map<Enchantment, Integer> enchants = getEnchantsFromOldFormat(oldFormat);
 		return serializeEnchantments(enchants);
 	}
 	
+	/**
+	 * Convert an old base-32 string into a map of enchantments and return the enchantments.
+	 * @param oldFormat The old (ChestShop compatible) enchantment code to use
+	 * @return A Map of enchantments and their levels using
+	 */
 	public static Map<Enchantment, Integer> convertAndGetEnchantments(String oldFormat){
 		String newFormat = convert(oldFormat);
 		return getEnchantments(newFormat);
 	}
 	
+	/**
+	 * Apply Enchantments to an ItemStack using a Enchantment serialization string
+	 * @param code The enchantment code to use
+	 * @param items The items to apply the enchantments to
+	 */
 	public static void addEnchantments(String code, ItemStack items){
 		items.addUnsafeEnchantments(getEnchantments(code));
 	}

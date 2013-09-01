@@ -6,20 +6,45 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+/**
+ * A class to help with the serialization of PotionEffects. The serialization technique is similar to that
+ * of serializing enchantments. The process can be as explained as such:
+ * <br/><br/>
+ * <pre>
+ * String serializedEffects = "";
+ * for(PotionEffect e : effects){
+ *     serializedEffects += e.getType().getId() + ":" + e.getDuration() + ":" + e.getAmplifier() + ";";
+ * }
+ * </pre>
+ * <br/>
+ * So that it would follow this pattern:<br/>
+ * <pre>id:duration:amplifier;...</pre>
+ * @author KILL3RTACO
+ *
+ */
 public class PotionEffectSerialization {
 
-	protected PotionEffectSerialization() {
-		
-	}
+	protected PotionEffectSerialization() {}
 	
+	/**
+	 * Serialize a Collection of PotionEffects into a string that follows the regex
+	 * <pre>([0-9]+:[0-9]+:[0-9]+;)+</pre>
+	 * @param effects The PotionEffects to serialize
+	 * @return The serialized PotionEffects
+	 */
 	public static String serializeEffects(Collection<PotionEffect> effects){
 		String serialized = "";
 		for(PotionEffect e : effects){
-			serialized = e.getType().getId() + ":" + e.getDuration() + ":" + e.getAmplifier() + ";";
+			serialized += e.getType().getId() + ":" + e.getDuration() + ":" + e.getAmplifier() + ";";
 		}
 		return serialized;
 	}
 	
+	/**
+	 * Get a Collection of PotionEffects from the given potion effect code
+	 * @param serializedEffects The potion effect code to decode from
+	 * @return A Collection of PotionEffects from the given potion effect code
+	 */
 	public static Collection<PotionEffect> getPotionEffects(String serializedEffects){
 		ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
 		if(serializedEffects.isEmpty()) return effects;
@@ -46,16 +71,25 @@ public class PotionEffectSerialization {
 		return effects;
 	}
 	
+	/**
+	 * Add the given PotionEffects to a LivingEntity
+	 * @param code The PotionEffects to add
+	 * @param entity The entity to add the PotionEffects
+	 */
 	public static void addPotionEffects(String code, LivingEntity entity){
 		entity.addPotionEffects(getPotionEffects(code));
 	}
 	
+	/**
+	 * Remove any current PotionEffects from a LivingEntity then add the given effects
+	 * @param code The PotionEffects to add
+	 * @param entity The entity to set the PotionEffects
+	 */
 	public static void setPotionEffects(String code, LivingEntity entity){
 		for(PotionEffect effect : entity.getActivePotionEffects()){
 			entity.removePotionEffect(effect.getType());
 		}
-		Collection<PotionEffect> effects = getPotionEffects(code);
-		entity.addPotionEffects(effects);
+		addPotionEffects(code, entity);
 	}
 
 }

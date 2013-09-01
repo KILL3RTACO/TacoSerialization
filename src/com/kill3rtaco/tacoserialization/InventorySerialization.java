@@ -151,8 +151,8 @@ public class InventorySerialization {
 	/**
 	 * Get the String form of the serialiazed ItemStack array. This produces the same result as
 	 * <code>serializeInventory(contents).toString()</code>
-	 * @param contents
-	 * @return
+	 * @param contents The Items to serialize
+	 * @return The serialization string
 	 */
 	public static String serializeInventoryAsString(ItemStack[] contents){
 		return serializeInventoryAsString(contents, false);
@@ -209,7 +209,7 @@ public class InventorySerialization {
 	 * Get an ItemStack array from a JSON String.
 	 * @param json The JSON String to use
 	 * @param size The expected size of the inventory, can be greater than expected
-	 * @return
+	 * @return An ItemStack array constructed from a JSONArray constructed from the given String
 	 */
 	public static ItemStack[] getInventory(String json, int size){
 		try {
@@ -224,7 +224,7 @@ public class InventorySerialization {
 	 * Gets an ItemStack array from a JSONObject.
 	 * @param inv The JSONObject to get from
 	 * @param size The expected size of the inventory, can be greater than expected
-	 * @return
+	 * @return An ItemStack array constructed from the given JSONArray
 	 */
 	public static ItemStack[] getInventory(JSONArray inv, int size){
 		try {
@@ -248,9 +248,9 @@ public class InventorySerialization {
 	
 	/**
 	 * Get an ItemStack array from a json file
-	 * @param jsonFile
+	 * @param jsonFile The File to use
 	 * @param size The expected size of the inventory, can be greater than expected
-	 * @return
+	 * @return An ItemStack array constructed from a JSONArray using the given file as a reference
 	 */
 	public static ItemStack[] getInventory(File jsonFile, int size){
 		String source = "";
@@ -267,14 +267,31 @@ public class InventorySerialization {
 		}
 	}
 	
+	/**
+	 * Sets the holders Inventory using an ItemStack array constructed from a JSONArray using the given 
+	 * String as a reference.
+	 * @param holder The InventoryHolder to which the Inventory will be set
+	 * @param inv The reference JSON string
+	 */
 	public static void setInventory(InventoryHolder holder, String inv){
 		setInventory(holder.getInventory(), inv);
 	}
 	
+	/**
+	 * Sets the holders Inventory using an ItemStack array constructed from a JSONArray.
+	 * @param holder The InventoryHolder to which the Inventory will be set
+	 * @param inv The reference JSONArray
+	 */
 	public static void setInventory(InventoryHolder holder, JSONArray inv){
 		setInventory(holder.getInventory(), inv);
 	}
 	
+	/**
+	 * Sets the Inventory using an ItemStack array constructed from a JSONArray using the given 
+	 * String as a reference.
+	 * @param holder The InventoryHolder to which the Inventory will be set
+	 * @param inv The reference JSON string
+	 */
 	public static void setInventory(Inventory inventory, String inv){
 		try {
 			setInventory(inventory, new JSONArray(inv));
@@ -283,6 +300,11 @@ public class InventorySerialization {
 		}
 	}
 	
+	/**
+	 * Sets the Inventory using an ItemStack array constructed from a JSONArray.
+	 * @param holder The InventoryHolder to which the Inventory will be set
+	 * @param inv The reference JSONArray
+	 */
 	public static void setInventory(Inventory inventory, JSONArray inv){
 		ItemStack[] items = getInventory(inv, inventory.getSize());
 		inventory.clear();
@@ -293,6 +315,12 @@ public class InventorySerialization {
 		}
 	}
 	
+	/**
+	 * Sets the players Inventory using an ItemStack array constructed from a JSONObject using the given 
+	 * String as a reference.
+	 * @param holder The InventoryHolder to which the Inventory will be set
+	 * @param inv The reference JSON string
+	 */
 	public static void setPlayerInventory(Player player, String inv){
 		try {
 			setPlayerInventory(player, new JSONObject(inv));
@@ -301,6 +329,11 @@ public class InventorySerialization {
 		}
 	}
 	
+	/**
+	 * Sets the Inventory using an ItemStack array constructed from a JSONObject.
+	 * @param holder The InventoryHolder to which the Inventory will be set
+	 * @param inv The reference JSONArray
+	 */
 	public static void setPlayerInventory(Player player, JSONObject inv){
 		try {
 			PlayerInventory inventory = player.getInventory();

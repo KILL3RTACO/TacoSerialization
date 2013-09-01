@@ -14,6 +14,10 @@ public class SerializationConfig {
 	
 	protected SerializationConfig() {}
 	
+	/**
+	 * Get the data folder for this config
+	 * @return The config's data folder
+	 */
 	public static File getDataFolder(){
 		//this serialization system is meant to be embedded into another plugin
 		//therefore at least one plugin should always exist
@@ -21,10 +25,17 @@ public class SerializationConfig {
 		return new File(pluginFolder.getParentFile() + "/TacoSerialization/");
 	}
 	
+	/**
+	 * Get the config file
+	 * @return The config file
+	 */
 	public static File getConfigFile(){
 		return new File(getDataFolder() + "/config.yml");
 	}
 	
+	/**
+	 * Reload the config
+	 */
 	public static void reload(){
 		config = YamlConfiguration.loadConfiguration(getConfigFile());
 		setDefaults();
@@ -32,6 +43,9 @@ public class SerializationConfig {
 		Logger.getLogger("Minecraft").log(Level.INFO, "[TacoSerialization] Config reloaded");
 	}
 	
+	/**
+	 * Save the config
+	 */
 	public static void save(){
 		try {
 			config.save(getConfigFile());
@@ -41,20 +55,15 @@ public class SerializationConfig {
 	}
 	
 	private static void setDefaults(){
-		addDefault("horse.age", true);
 		addDefault("horse.color", true);
-		addDefault("horse.health", true);
-		addDefault("horse.health", true);
 		addDefault("horse.inventory", true);
 		addDefault("horse.jump-stength", true);
-		addDefault("horse.name", true);
-		addDefault("horse.potion-effects", true);
 		addDefault("horse.style", true);
 		addDefault("horse.variant", true);
-		addDefault("ocelot.age", true);
-		addDefault("ocelot.health", true);
-		addDefault("ocelot.name", true);
-		addDefault("ocelot.potion-effects", true);
+		addDefault("living-entity.age", true);
+		addDefault("living-entity.health", true);
+		addDefault("living-entity.name", true);
+		addDefault("living-entity.potion-effects", true);
 		addDefault("ocelot.type", true);
 		addDefault("player.ender-chest", true);
 		addDefault("player.inventory", true);
@@ -69,13 +78,15 @@ public class SerializationConfig {
 		addDefault("player-stats.level", true);
 		addDefault("player-stats.potion-effects", true);
 		addDefault("player-stats.saturation", true);
-		addDefault("wolf.age", true);
 		addDefault("wolf.collar-color", true);
-		addDefault("wolf.health", true);
-		addDefault("wolf.name", true);
-		addDefault("wolf.potion-effects", true);
 	}
 	
+	/**
+	 * Add a default value to the config. If the config does not have the given key, the key will be added
+	 * with the assocaiated value. Otherwise it will be ignored.
+	 * @param path
+	 * @param value
+	 */
 	public static void addDefault(String path, Object value){
 		if(!getConfig().contains(path))
 			getConfig().set(path, value);
@@ -88,6 +99,11 @@ public class SerializationConfig {
 		return config;
 	}
 	
+	/**
+	 * Get whether a certain key should be serialized when serializing an object.
+	 * @param path The path in the config
+	 * @return Whether the key should be serialized
+	 */
 	public static boolean getShouldSerialize(String path){
 		return getConfig().getBoolean(path);
 	}
