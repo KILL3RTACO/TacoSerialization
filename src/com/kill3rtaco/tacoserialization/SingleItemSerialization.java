@@ -204,7 +204,7 @@ public class SingleItemSerialization {
 	 * @param index The position of the ItemStack
 	 * @param pretty Whether the resulting string should be 'pretty' or not
 	 * @param indentFactor The amount of spaces in a tab
-	 * @returnThe serialization string
+	 * @return The serialization string
 	 */
 	public static String serializeItemInInventoryAsString(ItemStack items, int index, boolean pretty, int indentFactor){
 		try {

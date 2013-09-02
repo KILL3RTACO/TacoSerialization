@@ -83,11 +83,12 @@ public class WolfSerialization {
 	 * @param stats The desired stats
 	 * @return The wolf spawned
 	 */
-	public static void spawnWolf(Location location, String stats){
+	public static Wolf spawnWolf(Location location, String stats){
 		try {
-			spawnWolf(location, new JSONObject(stats));
+			return spawnWolf(location, new JSONObject(stats));
 		} catch (JSONException e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 	
