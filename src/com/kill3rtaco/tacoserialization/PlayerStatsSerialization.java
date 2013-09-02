@@ -1,7 +1,7 @@
 package com.kill3rtaco.tacoserialization;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,25 +27,27 @@ public class PlayerStatsSerialization {
 	public static JSONObject serializePlayerStats(Player player){
 		try {
 			JSONObject root = new JSONObject();
-			if(SerializationConfig.getShouldSerialize("player-stats.can-fly"))
+			if(shouldSerialize("can-fly"))
 				root.put("can-fly", player.getAllowFlight());
-			if(SerializationConfig.getShouldSerialize("player-stats.display-name"))
+			if(shouldSerialize("display-name"))
 				root.put("display-name", player.getDisplayName());
-			if(SerializationConfig.getShouldSerialize("player-stats.exhaustion"))
+			if(shouldSerialize("exhaustion"))
 				root.put("exhaustion", player.getExhaustion());
-			if(SerializationConfig.getShouldSerialize("player-stats.exp"))
+			if(shouldSerialize("exp"))
 				root.put("exp", player.getExp());
-			if(SerializationConfig.getShouldSerialize("player-stats.flying"))
+			if(shouldSerialize("flying"))
 				root.put("flying", player.isFlying());
-			if(SerializationConfig.getShouldSerialize("player-stats.food"))
+			if(shouldSerialize("food"))
 				root.put("food", player.getFoodLevel());
-			if(SerializationConfig.getShouldSerialize("player-stats.health"))
+			if(shouldSerialize("gamemode"))
+				root.put("gamemode", player.getGameMode().ordinal());
+			if(shouldSerialize("health"))
 				root.put("health", player.getHealthScale());
-			if(SerializationConfig.getShouldSerialize("player-stats.level"))
+			if(shouldSerialize("level"))
 				root.put("level", player.getLevel());
-			if(SerializationConfig.getShouldSerialize("player-stats.potion-effects"))
+			if(shouldSerialize("ppotion-effects"))
 				root.put("potion-effects", PotionEffectSerialization.serializeEffects(player.getActivePotionEffects()));
-			if(SerializationConfig.getShouldSerialize("player-stats.saturation"))
+			if(shouldSerialize("saturation"))
 				root.put("saturation", player.getSaturation());
 			return root;
 		} catch (JSONException e) {
@@ -127,6 +129,8 @@ public class PlayerStatsSerialization {
 				player.setFoodLevel(stats.getInt("food"));
 			if(stats.has("health"))
 				player.setHealth(stats.getDouble("health"));
+			if(stats.has("gamemode"))
+				player.setGameMode(GameMode.getByValue(stats.getInt("gamemode")));
 			if(stats.has("level"))
 				player.setLevel(stats.getInt("level"));
 			if(stats.has("potion-effects"))

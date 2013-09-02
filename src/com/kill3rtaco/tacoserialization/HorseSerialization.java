@@ -53,7 +53,7 @@ public class HorseSerialization {
 	public static String serializeHorseAsString(Horse horse){
 		return serializeHorseAsString(horse, false);
 	}
-	
+
 	/**
 	 * Serialize a Horse as a String.
 	 * @param horse The Horse to serialize
