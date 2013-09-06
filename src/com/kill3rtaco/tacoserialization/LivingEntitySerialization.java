@@ -17,11 +17,13 @@ import org.json.JSONObject;
  * 'TacoSerialization'. Inside the folder will be a config.yml file. Various values can be turned off to
  * prevent some keys from being generated.
  * @author KILL3RTACO
+ * @since 1.0
  *
  */
 public class LivingEntitySerialization {
-
-	protected LivingEntitySerialization() {}
+	
+	protected LivingEntitySerialization() {
+	}
 	
 	/**
 	 * Serialize a LivingEntity into a JSONObject. If the given LivingEntity is a Player,
@@ -29,8 +31,8 @@ public class LivingEntitySerialization {
 	 * @param entity
 	 * @return
 	 */
-	public static JSONObject serializeEntity(LivingEntity entity){
-		if(entity instanceof Player){
+	public static JSONObject serializeEntity(LivingEntity entity) {
+		if(entity instanceof Player) {
 			return PlayerSerialization.serializePlayer((Player) entity);
 		}
 		try {
@@ -56,7 +58,7 @@ public class LivingEntitySerialization {
 	 * @param entity The LivingEntity to serialize
 	 * @return The serialization string
 	 */
-	public static String serializeEntityAsString(LivingEntity entity){
+	public static String serializeEntityAsString(LivingEntity entity) {
 		return serializeEntityAsString(entity, false);
 	}
 	
@@ -66,7 +68,7 @@ public class LivingEntitySerialization {
 	 * @param pretty Whether the resulting string should be 'pretty' or not
 	 * @return The serialization string
 	 */
-	public static String serializeEntityAsString(LivingEntity entity, boolean pretty){
+	public static String serializeEntityAsString(LivingEntity entity, boolean pretty) {
 		return serializeEntityAsString(entity, pretty, 5);
 	}
 	
@@ -77,14 +79,14 @@ public class LivingEntitySerialization {
 	 * @param indentFactor The amount of spaces in a tab
 	 * @return The serialization string
 	 */
-	public static String serializeEntityAsString(LivingEntity entity, boolean pretty, int indentFactor){
+	public static String serializeEntityAsString(LivingEntity entity, boolean pretty, int indentFactor) {
 		try {
-			if(pretty){
+			if(pretty) {
 				return serializeEntity(entity).toString(indentFactor);
-			}else{
+			} else {
 				return serializeEntity(entity).toString();
 			}
-		} catch (JSONException e){
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -97,7 +99,7 @@ public class LivingEntitySerialization {
 	 * @param stats The stats of the entity
 	 * @return The LivingEntity spawned
 	 */
-	public static LivingEntity spawnEntity(Location location, String stats){
+	public static LivingEntity spawnEntity(Location location, String stats) {
 		try {
 			return spawnEntity(location, new JSONObject(stats));
 		} catch (JSONException e) {
@@ -112,11 +114,11 @@ public class LivingEntitySerialization {
 	 * @param stats The stats of the entity
 	 * @return The LivingEntity spawned
 	 */
-	public static LivingEntity spawnEntity(Location location, JSONObject stats){
+	public static LivingEntity spawnEntity(Location location, JSONObject stats) {
 		try {
-			if(!stats.has("type")){
+			if(!stats.has("type")) {
 				throw new IllegalArgumentException("The type of the entity cannot be determined");
-			}else{
+			} else {
 				LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, EntityType.fromId(stats.getInt("type")));
 				if(stats.has("age") && entity instanceof Ageable)
 					((Ageable) entity).setAge(stats.getInt("age"));
@@ -124,11 +126,12 @@ public class LivingEntitySerialization {
 					entity.setHealth(stats.getDouble("health"));
 				if(stats.has("name"))
 					entity.setCustomName(stats.getString("name"));
-				if(stats.has("potion-effects"));
-					PotionEffectSerialization.addPotionEffects(stats.getString("potion-effects"), entity);
+				if(stats.has("potion-effects"))
+					;
+				PotionEffectSerialization.addPotionEffects(stats.getString("potion-effects"), entity);
 				return entity;
 			}
-		} catch (JSONException e){
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -139,8 +142,8 @@ public class LivingEntitySerialization {
 	 * @param key The key to test
 	 * @return Whether the key should be serilaized or not
 	 */
-	public static boolean shouldSerialize(String key){
+	public static boolean shouldSerialize(String key) {
 		return SerializationConfig.getShouldSerialize("living-entity." + key);
 	}
-
+	
 }

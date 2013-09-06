@@ -13,18 +13,20 @@ import org.json.JSONObject;
  * 'TacoSerialization'. Inside the folder will be a config.yml file. Various values can be turned off to
  * prevent some keys from being generated.
  * @author KILL3RTACO
+ * @since 1.0
  *
  */
 public class PlayerStatsSerialization {
 	
-	protected PlayerStatsSerialization() {}
+	protected PlayerStatsSerialization() {
+	}
 	
 	/**
 	 * Serialize a player's stats
 	 * @param player The player whose stats to serialize
 	 * @return The serialized stats
 	 */
-	public static JSONObject serializePlayerStats(Player player){
+	public static JSONObject serializePlayerStats(Player player) {
 		try {
 			JSONObject root = new JSONObject();
 			if(shouldSerialize("can-fly"))
@@ -61,7 +63,7 @@ public class PlayerStatsSerialization {
 	 * @param player The player whose stats to serialize
 	 * @return The serialization string
 	 */
-	public static String serializePlayerStatsAsString(Player player){
+	public static String serializePlayerStatsAsString(Player player) {
 		return serializePlayerStatsAsString(player, false);
 	}
 	
@@ -71,7 +73,7 @@ public class PlayerStatsSerialization {
 	 * @param pretty Whether the resulting string should be 'pretty' or not
 	 * @return The serialization string
 	 */
-	public static String serializePlayerStatsAsString(Player player, boolean pretty){
+	public static String serializePlayerStatsAsString(Player player, boolean pretty) {
 		return serializePlayerStatsAsString(player, pretty, 5);
 	}
 	
@@ -82,14 +84,14 @@ public class PlayerStatsSerialization {
 	 * @param indentFactor The amount of spaces in a tab
 	 * @return The serialization string
 	 */
-	public static String serializePlayerStatsAsString(Player player, boolean pretty, int indentFactor){
-		try{
-			if(pretty){
+	public static String serializePlayerStatsAsString(Player player, boolean pretty, int indentFactor) {
+		try {
+			if(pretty) {
 				return serializePlayerStats(player).toString(indentFactor);
-			}else{
+			} else {
 				return serializePlayerStats(player).toString();
 			}
-		} catch(JSONException e){
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -100,7 +102,7 @@ public class PlayerStatsSerialization {
 	 * @param player The player to affect
 	 * @param stats The stats to apply
 	 */
-	public static void applyPlayerStats(Player player, String stats){
+	public static void applyPlayerStats(Player player, String stats) {
 		try {
 			applyPlayerStats(player, new JSONObject(stats));
 		} catch (JSONException e) {
@@ -113,7 +115,7 @@ public class PlayerStatsSerialization {
 	 * @param player The player to affect
 	 * @param stats The stats to apply
 	 */
-	public static void applyPlayerStats(Player player, JSONObject stats){
+	public static void applyPlayerStats(Player player, JSONObject stats) {
 		try {
 			if(stats.has("can-fly"))
 				player.setAllowFlight(stats.getBoolean("can-fly"));
@@ -137,20 +139,18 @@ public class PlayerStatsSerialization {
 				PotionEffectSerialization.setPotionEffects(stats.getString("potion-effects"), player);
 			if(stats.has("saturation"))
 				player.setSaturation((float) stats.getDouble("saturation"));
-		} catch (JSONException e){
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
-
 	
 	/**
 	 * Test if a certain key should be serialized
 	 * @param key The key to test
 	 * @return Whether the key should be serilaized or not
 	 */
-	public static boolean shouldSerialize(String key){
+	public static boolean shouldSerialize(String key) {
 		return SerializationConfig.getShouldSerialize("player-stats." + key);
 	}
-
+	
 }

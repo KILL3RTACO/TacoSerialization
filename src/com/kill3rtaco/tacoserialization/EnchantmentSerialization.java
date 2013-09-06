@@ -26,11 +26,13 @@ import org.bukkit.inventory.ItemStack;
  * 
  * This allows for much easier readability as well as the possibility to unsafely add enchantments
  * @author KILL3RTACO
+ * @since 1.0
  *
  */
 public class EnchantmentSerialization {
-
-	protected EnchantmentSerialization() {}
+	
+	protected EnchantmentSerialization() {
+	}
 	
 	/**
 	 * Serialize a Map of Enchantments and their levels into a string that follows the regex
@@ -38,9 +40,9 @@ public class EnchantmentSerialization {
 	 * @param enchantments The Enchantment Map to serialize
 	 * @return
 	 */
-	public static String serializeEnchantments(Map<Enchantment, Integer> enchantments){
+	public static String serializeEnchantments(Map<Enchantment, Integer> enchantments) {
 		String serialized = "";
-		for(Enchantment e : enchantments.keySet()){
+		for(Enchantment e : enchantments.keySet()) {
 			serialized += e.getId() + ":" + enchantments.get(e) + ";";
 		}
 		return serialized;
@@ -51,11 +53,12 @@ public class EnchantmentSerialization {
 	 * @param serializedEnchants The serialization string to decode
 	 * @return A Map of enchantments and their levels
 	 */
-	public static Map<Enchantment, Integer> getEnchantments(String serializedEnchants){
+	public static Map<Enchantment, Integer> getEnchantments(String serializedEnchants) {
 		HashMap<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
-		if(serializedEnchants.isEmpty()) return enchantments;
+		if(serializedEnchants.isEmpty())
+			return enchantments;
 		String[] enchants = serializedEnchants.split(";");
-		for(int i=0; i<enchants.length; i++){
+		for(int i = 0; i < enchants.length; i++) {
 			String[] ench = enchants[i].split(":");
 			if(ench.length < 2)
 				throw new IllegalArgumentException(serializedEnchants + " - Enchantment " + i + " (" + enchants[i] + "): split must at least have a length of 2");
@@ -78,16 +81,16 @@ public class EnchantmentSerialization {
 	 * @param oldFormat The old (ChestShop compatible) enchantment code.
 	 * @return A map of enchantments and their levels using the old (ChestShop compatible) enchantment code.
 	 */
-	public static Map<Enchantment, Integer> getEnchantsFromOldFormat(String oldFormat){
+	public static Map<Enchantment, Integer> getEnchantsFromOldFormat(String oldFormat) {
 		HashMap<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
-		if(oldFormat.length() == 0){
+		if(oldFormat.length() == 0) {
 			return enchants;
 		}
 		String nums = Long.parseLong(oldFormat, 32) + "";
 		System.out.println(nums);
-		for(int i=0; i<nums.length(); i+=3){
-			int enchantId = Integer.parseInt(nums.substring(i, i+2));
-			int enchantLevel = Integer.parseInt(nums.charAt(i+2) + "");
+		for(int i = 0; i < nums.length(); i += 3) {
+			int enchantId = Integer.parseInt(nums.substring(i, i + 2));
+			int enchantLevel = Integer.parseInt(nums.charAt(i + 2) + "");
 			Enchantment ench = Enchantment.getById(enchantId);
 			enchants.put(ench, enchantLevel);
 		}
@@ -99,7 +102,7 @@ public class EnchantmentSerialization {
 	 * @param oldFormat
 	 * @return The converted String
 	 */
-	public static String convert(String oldFormat){
+	public static String convert(String oldFormat) {
 		Map<Enchantment, Integer> enchants = getEnchantsFromOldFormat(oldFormat);
 		return serializeEnchantments(enchants);
 	}
@@ -109,7 +112,7 @@ public class EnchantmentSerialization {
 	 * @param oldFormat The old (ChestShop compatible) enchantment code to use
 	 * @return A Map of enchantments and their levels using
 	 */
-	public static Map<Enchantment, Integer> convertAndGetEnchantments(String oldFormat){
+	public static Map<Enchantment, Integer> convertAndGetEnchantments(String oldFormat) {
 		String newFormat = convert(oldFormat);
 		return getEnchantments(newFormat);
 	}
@@ -119,8 +122,8 @@ public class EnchantmentSerialization {
 	 * @param code The enchantment code to use
 	 * @param items The items to apply the enchantments to
 	 */
-	public static void addEnchantments(String code, ItemStack items){
+	public static void addEnchantments(String code, ItemStack items) {
 		items.addUnsafeEnchantments(getEnchantments(code));
 	}
-
+	
 }

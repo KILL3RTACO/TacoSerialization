@@ -2,7 +2,6 @@ package com.kill3rtaco.tacoserialization;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Horse;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,18 +13,20 @@ import org.json.JSONObject;
  * 'TacoSerialization'. Inside the folder will be a config.yml file. Various values can be turned off to
  * prevent some keys from being generated.
  * @author KILL3RTACO
+ * @since 1.0
  *
  */
 public class HorseSerialization {
-
-	protected HorseSerialization(){}
+	
+	protected HorseSerialization() {
+	}
 	
 	/**
 	 * Serialize a Horse into a JSONObject.
 	 * @param horse The Horse to serialize
 	 * @return The serialized Horse
 	 */
-	public static JSONObject serializeHorse(Horse horse){
+	public static JSONObject serializeHorse(Horse horse) {
 		try {
 			JSONObject root = LivingEntitySerialization.serializeEntity(horse);
 			if(shouldSerialize("color"))
@@ -50,17 +51,17 @@ public class HorseSerialization {
 	 * @param horse The Horse to serialize
 	 * @return The serialization String.
 	 */
-	public static String serializeHorseAsString(Horse horse){
+	public static String serializeHorseAsString(Horse horse) {
 		return serializeHorseAsString(horse, false);
 	}
-
+	
 	/**
 	 * Serialize a Horse as a String.
 	 * @param horse The Horse to serialize
 	 * @param pretty Whether the resulting string should be 'pretty' or not.
 	 * @return The serialization String.
 	 */
-	public static String serializeHorseAsString(Horse horse, boolean pretty){
+	public static String serializeHorseAsString(Horse horse, boolean pretty) {
 		return serializeHorseAsString(horse, pretty, 5);
 	}
 	
@@ -71,14 +72,14 @@ public class HorseSerialization {
 	 * @param indentFactor The amount of spaces in a tab
 	 * @return The serialization String.
 	 */
-	public static String serializeHorseAsString(Horse horse, boolean pretty, int indentFactor){
+	public static String serializeHorseAsString(Horse horse, boolean pretty, int indentFactor) {
 		try {
-			if(pretty){
+			if(pretty) {
 				return serializeHorse(horse).toString(indentFactor);
-			}else{
+			} else {
 				return serializeHorse(horse).toString();
 			}
-		} catch (JSONException e){
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -91,7 +92,7 @@ public class HorseSerialization {
 	 * @param stats The stats to apply
 	 * @return The Horse spawned
 	 */
-	public static Horse spawnHorse(Location location, String stats){
+	public static Horse spawnHorse(Location location, String stats) {
 		try {
 			return spawnHorse(location, new JSONObject(stats));
 		} catch (JSONException e) {
@@ -106,8 +107,8 @@ public class HorseSerialization {
 	 * @param stats The stats to apply
 	 * @return The Horse spawned
 	 */
-	public static Horse spawnHorse(Location location, JSONObject stats){
-		try{
+	public static Horse spawnHorse(Location location, JSONObject stats) {
+		try {
 			Horse horse = (Horse) LivingEntitySerialization.spawnEntity(location, stats);
 			if(stats.has("color"))
 				horse.setColor(Horse.Color.valueOf(stats.getString("color")));
@@ -120,7 +121,7 @@ public class HorseSerialization {
 			if(stats.has("variant"))
 				horse.setVariant(Horse.Variant.valueOf(stats.getString("variant")));
 			return horse;
-		} catch(JSONException e){
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -131,8 +132,8 @@ public class HorseSerialization {
 	 * @param key The key to test
 	 * @return Whether the key should be serilaized or not
 	 */
-	public static boolean shouldSerialize(String key){
+	public static boolean shouldSerialize(String key) {
 		return SerializationConfig.getShouldSerialize("horse." + key);
 	}
-
+	
 }
