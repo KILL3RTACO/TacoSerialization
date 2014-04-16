@@ -8,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -58,7 +59,7 @@ public class SingleItemSerialization {
 			String name = null, enchants = null;
 			String[] lore = null;
 			Material mat = items.getType();
-			JSONObject bookMeta = null, armorMeta = null, skullMeta = null;
+			JSONObject bookMeta = null, armorMeta = null, skullMeta = null, fwMeta = null;
 			if(mat == Material.BOOK_AND_QUILL || mat == Material.WRITTEN_BOOK) {
 				bookMeta = BookSerialization.serializeBookMeta((BookMeta) items.getItemMeta());
 			} else if(mat == Material.ENCHANTED_BOOK) {
@@ -67,13 +68,15 @@ public class SingleItemSerialization {
 				armorMeta = LeatherArmorSerialization.serializeArmor((LeatherArmorMeta) items.getItemMeta());
 			} else if(mat == Material.SKULL_ITEM) {
 				skullMeta = SkullSerialization.serializeSkull((SkullMeta) items.getItemMeta());
+			} else if(mat == Material.FIREWORK) {
+				fwMeta = FireworkSerialization.serializeFireworkMeta((FireworkMeta) items.getItemMeta());
 			}
 			if(hasMeta) {
 				ItemMeta meta = items.getItemMeta();
 				if(meta.hasDisplayName())
 					name = meta.getDisplayName();
 				if(meta.hasLore()) {
-					lore = meta.getLore().toArray(new String[] {});
+					lore = meta.getLore().toArray(new String[]{});
 				}
 				if(meta.hasEnchants())
 					enchants = EnchantmentSerialization.serializeEnchantments(meta.getEnchants());
@@ -96,6 +99,8 @@ public class SingleItemSerialization {
 				values.put("armor-meta", armorMeta);
 			if(skullMeta != null && skullMeta.length() > 0)
 				values.put("skull-meta", skullMeta);
+			if(fwMeta != null && fwMeta.length() > 0)
+				values.put("firework-meta", fwMeta);
 			return values;
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -179,6 +184,9 @@ public class SingleItemSerialization {
 				stuff.setItemMeta(meta);
 			} else if(mat == Material.SKULL_ITEM && item.has("skull-meta")) {
 				SkullMeta meta = SkullSerialization.getSkullMeta(item.getJSONObject("skull-meta"));
+				stuff.setItemMeta(meta);
+			} else if(mat == Material.FIREWORK && item.has("firework-meta")) {
+				FireworkMeta meta = FireworkSerialization.getFireworkMeta(item.getJSONObject("firework-meta"));
 				stuff.setItemMeta(meta);
 			}
 			ItemMeta meta = stuff.getItemMeta();
