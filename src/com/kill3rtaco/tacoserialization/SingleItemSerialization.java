@@ -58,6 +58,7 @@ public class SingleItemSerialization {
 			boolean hasMeta = items.hasItemMeta();
 			String name = null, enchants = null;
 			String[] lore = null;
+			int repairPenalty = 0;
 			Material mat = items.getType();
 			JSONObject bookMeta = null, armorMeta = null, skullMeta = null, fwMeta = null;
 			if(mat == Material.BOOK_AND_QUILL || mat == Material.WRITTEN_BOOK) {
@@ -80,8 +81,15 @@ public class SingleItemSerialization {
 				}
 				if(meta.hasEnchants())
 					enchants = EnchantmentSerialization.serializeEnchantments(meta.getEnchants());
+				if(meta instanceof Repairable){
+					Repairable rep = (Repairable) meta;
+					if(rep.hasRepairCost()){
+						repairPenalty = rep.getRepairCost();
+					}
+				}
+
 			}
-			
+
 			values.put("id", id);
 			values.put("amount", amount);
 			values.put("data", data);
@@ -93,6 +101,8 @@ public class SingleItemSerialization {
 				values.put("enchantments", enchants);
 			if(lore != null)
 				values.put("lore", lore);
+			if(repairPenalty != 0)
+				values.put("repairPenalty", repairPenalty);
 			if(bookMeta != null && bookMeta.length() > 0)
 				values.put("book-meta", bookMeta);
 			if(armorMeta != null && armorMeta.length() > 0)
@@ -149,7 +159,7 @@ public class SingleItemSerialization {
 	 * @param index The index of the ItemStack in an inventory or ItemStack array
 	 * @return The deserialized ItemStack
 	 */
-	public static ItemStack getItem(JSONObject item, int index) {
+public static ItemStack getItem(JSONObject item, int index) {
 		try {
 			int id = item.getInt("id");
 			int amount = item.getInt("amount");
@@ -157,6 +167,7 @@ public class SingleItemSerialization {
 			String name = null;
 			Map<Enchantment, Integer> enchants = null;
 			ArrayList<String> lore = null;
+			int repairPenalty = 0;
 			if(item.has("name"))
 				name = item.getString("name");
 			if(item.has("enchantments"))
@@ -168,7 +179,10 @@ public class SingleItemSerialization {
 					lore.add(l.getString(j));
 				}
 			}
-			
+			if(item.has("repairPenalty"))
+				repairPenalty = item.getInt("repairPenalty");				
+
+
 			if(Material.getMaterial(id) == null)
 				throw new IllegalArgumentException("Item " + index + " - No Material found with id of " + id);
 			Material mat = Material.getMaterial(id);
@@ -195,6 +209,12 @@ public class SingleItemSerialization {
 			if(lore != null)
 				meta.setLore(lore);
 			stuff.setItemMeta(meta);
+			if(repairPenalty != 0){
+				Repairable rep = (Repairable) meta;
+				rep.setRepairCost(repairPenalty);
+				stuff.setItemMeta((ItemMeta) rep);
+			}
+
 			if(enchants != null)
 				stuff.addUnsafeEnchantments(enchants);
 			return stuff;
